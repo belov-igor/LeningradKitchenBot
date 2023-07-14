@@ -5,6 +5,7 @@ from pydantic import BaseSettings, SecretStr
 class Settings(BaseSettings):
     # Желательно вместо str использовать SecretStr для конфиденциальных данных, например, токена бота
     bot_token: SecretStr
+    admin_id: SecretStr
 
     # Вложенный класс с дополнительными указаниями для настроек
     class Config:
@@ -16,3 +17,5 @@ class Settings(BaseSettings):
 
 # При импорте файла сразу создастся и провалидируется объект конфига, который можно далее импортировать из разных мест
 config = Settings()
+# print(config.bot_token)
+# print(config.admin_id)
