@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from aiogram import Router
 from aiogram import types
-from aiogram.filters.command import Command
-from aiogram.filters.text import Text
+from aiogram.filters import Command
+from aiogram.filters import Text
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 import database as db

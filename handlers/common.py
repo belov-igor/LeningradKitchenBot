@@ -7,7 +7,6 @@ from config_reader import config
 
 from keyboards import admin_keyboards
 
-
 router = Router()
 
 

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from aiogram import Router
 from aiogram import types
-from aiogram.filters.command import Command
+from aiogram.filters import Command
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
-from aiogram.filters.text import Text
+from aiogram.filters import Text
 from keyboards import admin_keyboards
 
 import database as db
@@ -40,17 +40,18 @@ async def back_to_orders(message: types.Message):
 
 
 # Загрузка нового пункта меню
-@router.message(Text("Добавить товар"), state=None)
-async def cmd_new_product(message: types.Message):
-    await FSMMenu.type.set()
+# @router.message(Text("Добавить товар"), state=None)
+# async def cmd_new_product(message: types.Message):
+#     await FSMMenu.
     # pass
 
-# @router.callback_query_handler(state=NewOrder.type)
+
+# @router.callback_query_handler(state=FSMMenu.type)
 # async def add_item_type(call: types.CallbackQuery, state: types.FSMContext):
 #     async with state.proxy() as data:
 #         data['type'] = call.data
 #     await call.message.answer('Напишите название товара', reply_markup=kb.cancel)
-#     await NewOrder.next()
+#     await FSMMenu.next()
 #
 #
 # @router.message_handler(state=NewOrder.name)
