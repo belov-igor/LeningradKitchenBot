@@ -17,6 +17,7 @@ async def db_start():
                 "i_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 "type TEXT, "
                 "name TEXT, "
+                "by_weight INTEGER, "
                 "description TEXT, "
                 "price TEXT, "
                 "photo TEXT)")
@@ -32,8 +33,8 @@ async def cmd_start_db(user_id):
 
 async def add_item(state):
     async with state.proxy() as data:
-        cur.execute("INSERT INTO items (type, name, description, price, photo, brand) VALUES (?, ?, ?, ?, ?)",
-                    (data['type'], data['name'], data['description'], data['price'], data['photo']))
+        cur.execute("INSERT INTO items (type, name, by_weight, description, price, photo) VALUES (?, ?, ?, ?, ?)",
+                    (data['type'], data['name'], data['by_weight'], data['description'], data['price'], data['photo']))
         db.commit()
 
 

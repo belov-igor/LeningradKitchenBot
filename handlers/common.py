@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 from aiogram.filters.command import Command
 from aiogram import Router, types
+from aiogram.fsm.context import FSMContext
 
-import database as db
+import dbconnect as db
 from config_reader import config
 
-from keyboards import admin_keyboards
+from keyboards import admin_kb
 
 router = Router()
 
 
 # Хэндлер на команду /start
 @router.message(Command("start"))
-async def cmd_order(message: types.Message):
+async def cmd_order(message: types.Message, state: FSMContext):
+    await state.clear()
     await db.cmd_start_db(message.from_user.id)
     file_ids = []
 
@@ -24,6 +26,6 @@ async def cmd_order(message: types.Message):
     file_ids.append(result.photo[-1].file_id)
 
     # Подключение админской клавиатуры
-    admin_panel_button = types.ReplyKeyboardMarkup(resize_keyboard=True, keyboard=admin_keyboards.admin_buttons)
+    admin_panel_button = types.ReplyKeyboardMarkup(resize_keyboard=True, keyboard=admin_kb.admin_buttons)
     if message.from_user.id == int(config.admin_id.get_secret_value()):
         await message.answer(text='Вы авторизовались как администратор!', reply_markup=admin_panel_button)
