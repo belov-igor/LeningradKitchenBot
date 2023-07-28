@@ -32,9 +32,10 @@ async def cmd_start_db(user_id):
 
 
 async def add_item(state):
-    async with state.proxy() as data:
-        cur.execute("INSERT INTO items (type, name, by_weight, description, price, photo) VALUES (?, ?, ?, ?, ?)",
-                    (data['type'], data['name'], data['by_weight'], data['description'], data['price'], data['photo']))
-        db.commit()
+    data = await state.get_data()
+    print(data)
+    cur.execute("INSERT INTO items (type, name, by_weight, description, price, photo) VALUES (?, ?, ?, ?, ?, ?)",
+                (data['type'], data['name'], data['by_weight'], data['description'], data['price'], data['photo']))
+    db.commit()
 
 
