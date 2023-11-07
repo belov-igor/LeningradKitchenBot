@@ -39,7 +39,7 @@ async def back_to_orders(message: types.Message):
         await message.answer(text='Посмотрим, что заказали?', reply_markup=admin_panel_button)
 
 
-# Загрузка нового пункта меню
+# Загрузка нового пункта товара
 @router.message(Text("Добавить товар"))
 async def add_item(message: types.Message, state: FSMContext):
     if message.from_user.id == int(config.admin_id.get_secret_value()):

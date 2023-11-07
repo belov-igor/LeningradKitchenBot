@@ -2,6 +2,7 @@
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+# Общая клавиатура для каталога
 calalog_list = InlineKeyboardBuilder()
 calalog_list.row(types.InlineKeyboardButton(text="🥟 Пельмени", callback_data="dumplings"))
 calalog_list.row(types.InlineKeyboardButton(text="🍲 Супы", callback_data="soups"))

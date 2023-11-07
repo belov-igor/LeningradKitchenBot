@@ -33,9 +33,12 @@ async def cmd_start_db(user_id):
 
 async def add_item(state):
     data = await state.get_data()
-    print(data)
     cur.execute("INSERT INTO items (type, name, by_weight, description, price, photo) VALUES (?, ?, ?, ?, ?, ?)",
                 (data['type'], data['name'], data['by_weight'], data['description'], data['price'], data['photo']))
     db.commit()
 
 
+async def get_dishes(dish_type):
+    dishes = cur.execute("SELECT * FROM items WHERE type = ?", (dish_type,)).fetchall()
+    return dishes
+    # return dishes

@@ -5,6 +5,7 @@ from aiogram.filters import Command
 from aiogram.filters import Text
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+import dbconnect as db
 from handlers.menu import information, delivery
 from keyboards import client_kb
 
@@ -36,16 +37,7 @@ router.include_router(information.router)
 # Хэндлер на команду /order
 @router.message(Command("order"))
 async def cmd_order(message: types.Message):
-    builder = InlineKeyboardBuilder()
-    builder.add(types.InlineKeyboardButton(
-        text="🥟 Пельмени", callback_data="dumpling_1"))
-    builder.add(types.InlineKeyboardButton(
-        text="🍲 Супы", callback_data="soups"))
-    builder.row(types.InlineKeyboardButton(
-        text="🥗 Салаты", callback_data="salads"))
-    builder.row(types.InlineKeyboardButton(
-        text="🫙 Соусы", callback_data="sauces"))
-    builder.adjust(1)
+    # Клавиатура из client_kb
     await message.answer("У нас вы можете заказать следующие позиции Ваших любимых продуктов",
                          reply_markup=client_kb.calalog_list.as_markup())
 
@@ -103,3 +95,7 @@ async def salads(callback: types.CallbackQuery):
 @router.callback_query(Text("sauces"))
 async def sauces(callback: types.CallbackQuery):
     await callback.message.answer("Вы выбрали категорию соусы")
+    ss = await db.get_dishes("sauces")
+    print(ss)
+    await callback.message.answer_photo(ss[0][-1])
+
