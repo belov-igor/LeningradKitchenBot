@@ -5,6 +5,7 @@ from aiogram.filters import Command
 from aiogram.filters import Text
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+# import bot
 import dbconnect as db
 from handlers.menu import information, delivery
 from keyboards import client_kb
@@ -91,11 +92,49 @@ async def salads(callback: types.CallbackQuery):
     await callback.message.answer("Вы выбрали категорию салаты")
 
 
+def get_keyboard(current_index: int, ):
+    keyboard = InlineKeyboardBuilder()
+    keyboard.add(types.InlineKeyboardButton(text="⬅️", callback_data=f"prev_{current_index}"))
+    keyboard.add(types.InlineKeyboardButton(text="➡️", callback_data=f"next_{current_index}"))
+    keyboard.row(types.InlineKeyboardButton(text="Заказать", callback_data="order"),
+                 types.InlineKeyboardButton(text="Назад", callback_data="back"))
+    return keyboard
+
+
 # Хэндлер на callback-команду sauces
 @router.callback_query(Text("sauces"))
 async def sauces(callback: types.CallbackQuery):
     await callback.message.answer("Вы выбрали категорию соусы")
+
     ss = await db.get_dishes("sauces")
     print(ss)
-    await callback.message.answer_photo(ss[0][-1])
+    current_index = 0
+    keyboard = get_keyboard(current_index)
 
+    # Отправляем первое изображение из папки с помощью FSInputFile
+    photo = ss[current_index][-1]
+    caption = f'{ss[current_index][-3]}\n' \
+              f'Стоимость за шт./кг: {ss[current_index][-2]}'
+    await callback.message.answer_photo(photo, caption=caption, reply_markup=keyboard.as_markup())
+
+    @router.callback_query(lambda c: c.data.startswith(("prev_", "next_")))
+    async def on_arrow_clicked(callback: types.CallbackQuery):
+        current_index = int(callback.data.split("_")[1])
+        total_images = len(ss)
+
+        # При нажатии кнопки "Влево"
+        if "prev" in callback.data:
+            current_index = (current_index - 1) % total_images
+        # При нажатии кнопки "Вправо"
+        elif "next" in callback.data:
+            current_index = (current_index + 1) % total_images
+
+        keyboard = get_keyboard(current_index)
+
+        # Заменяем медиаконтент в сообщении на новое изображение из папки
+        photo = ss[current_index][-1]
+        caption = f'{ss[current_index][-3]}\n' \
+                  f'Стоимость за шт./кг: {ss[current_index][-2]}'
+        await callback.message.edit_media(media=types.InputMediaPhoto(media=photo, caption=caption),
+                                          reply_markup=keyboard.as_markup()
+        )
